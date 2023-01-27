@@ -11,10 +11,15 @@ def get_response(url):
     return response
 
 
-def get_basic_info(ticker):
+def get_ticker_info(ticker):
     resp = get_response(
         f"https://api.polygon.io/v3/reference/tickers/{ticker}?apiKey={apiKey}")
-    name, ticker, primary_exchange, list_date, market_cap, share_class_shares_outstanding = None, None, None, None, None, None
+    name = None
+    ticker = None
+    primary_exchange = None
+    list_date = None
+    market_cap = None
+    share_class_shares_outstanding = None
     try:
         result = resp.json()["results"]
     except:
@@ -66,19 +71,6 @@ def get_custom_day_data(ticker, day):
     return c, h, l, o, v, vw, n
 
 
-def get_curr_day_data(ticker):
-    curr_day = get_curr_day()
-    return get_custom_day_data(ticker, curr_day)
-
-
-def get_prev_day_data(ticker):
-    prev_day = get_prev_day()
-    return get_custom_day_data(ticker, prev_day)
-
-
-def get_next_day_data(ticker):
-    next_day = get_next_day()
-    return get_custom_day_data(ticker, next_day)
 
 
 def get_2_minute_data(ticker, from_time, to_time):
@@ -91,7 +83,7 @@ def get_2_minute_data(ticker, from_time, to_time):
         pass
     return results
 
-def get_52W_high_and_low(ticker):
+def get_fifty_two_week_high_low(ticker):
     curr_day = get_curr_day()
     resp = get_response(
         f"https://api.polygon.io/v2/aggs/ticker/{ticker}/range/1/year/{curr_day}/{curr_day}?adjusted=true&sort=asc&apiKey={apiKey}")
