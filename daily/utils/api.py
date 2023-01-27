@@ -71,8 +71,6 @@ def get_custom_day_data(ticker, day):
     return c, h, l, o, v, vw, n
 
 
-
-
 def get_2_minute_data(ticker, from_time, to_time):
     resp = get_response(
         f"https://api.polygon.io/v2/aggs/ticker/{ticker}/range/2/minute/{from_time}/{to_time}?adjusted=true&sort=asc&apiKey={apiKey}")
@@ -83,10 +81,11 @@ def get_2_minute_data(ticker, from_time, to_time):
         pass
     return results
 
+
 def get_fifty_two_week_high_low(ticker):
-    curr_day = get_curr_day()
+    today = get_today()
     resp = get_response(
-        f"https://api.polygon.io/v2/aggs/ticker/{ticker}/range/1/year/{curr_day}/{curr_day}?adjusted=true&sort=asc&apiKey={apiKey}")
+        f"https://api.polygon.io/v2/aggs/ticker/{ticker}/range/1/year/{today}/{today}?adjusted=true&sort=asc&apiKey={apiKey}")
     fifty_two_week_high = None
     fifty_two_week_low = None
     try:
