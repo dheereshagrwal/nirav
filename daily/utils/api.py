@@ -82,16 +82,16 @@ def get_2_minute_data(ticker, from_time, to_time):
     return results
 
 
-def get_fifty_two_week_high_low(ticker):
+def get_fifty_two_week_h_l(ticker):
     today = get_today()
     resp = get_response(
         f"https://api.polygon.io/v2/aggs/ticker/{ticker}/range/1/year/{today}/{today}?adjusted=true&sort=asc&apiKey={apiKey}")
-    fifty_two_week_high = None
-    fifty_two_week_low = None
+    fifty_two_week_h = None
+    fifty_two_week_l = None
     try:
         results = resp.json()["results"]
-        fifty_two_week_high = results[0]["h"]
-        fifty_two_week_low = results[0]["l"]
+        fifty_two_week_h = results[0]["h"]
+        fifty_two_week_l = results[0]["l"]
     except:
         pass
-    return fifty_two_week_high, fifty_two_week_low
+    return fifty_two_week_h, fifty_two_week_l

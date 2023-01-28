@@ -1,16 +1,16 @@
 import pandas as pd
-import os
 from utils.api import *
 from utils.targets import *
-from utils.misc import *
+from utils.gap_percent import *
 from utils.date_helpers import *
 from utils.data_2_minute import *
 from utils.finviz import *
 from utils.ft import *
+from utils.candle_patterns import *
 from utils.r_and_s import *
-from dotenv import load_dotenv
+from utils.eq_cam import *
+from utils.next_r4_s4 import *
 from numerize_denumerize import numerize
-load_dotenv()
 try:
     file = open("tickers.txt", "r")
     tickers = file.readlines()
@@ -44,15 +44,11 @@ for ticker in tickers:
     prev_s6 = get_s6(prev_c, prev_h, prev_l)
     print(f"prev_r3: {prev_r3}, prev_r4: {prev_r4}, prev_r6: {prev_r6}, prev_s3: {prev_s3}, prev_s4: {prev_s4}, prev_s6: {prev_s6}")
 
-    tight_r6 = get_tight_r6(prev_c, prev_h, prev_l)
-    tight_s6 = get_tight_s6(prev_c, prev_h, prev_l)
-    print(f"tight_r6: {tight_r6}, tight_s6: {tight_s6}")
-
-    fifty_two_week_high, fifty_two_week_low = get_fifty_two_week_high_low(
+    fifty_two_week_h, fifty_two_week_l = get_fifty_two_week_h_l(
         ticker)
     print(
-        f"fifty_two_week_high: {fifty_two_week_high}, fifty_two_week_low: {fifty_two_week_low}")
-    
+        f"fifty_two_week_h: {fifty_two_week_h}, fifty_two_week_l: {fifty_two_week_l}")
+
     today = get_today()
     print(f"today: {today}")
 
@@ -68,6 +64,10 @@ for ticker in tickers:
     today_s6 = get_s6(today_c, today_h, today_l)
     print(f"today_r3: {today_r3}, today_r4: {today_r4}, today_r6: {today_r6}, today_s3: {today_s3}, today_s4: {today_s4}, today_s6: {today_s6}")
 
+    tight_r6 = get_tight_r6(prev_r6, today_r6)
+    tight_s6 = get_tight_s6(prev_s6, today_s6)
+    print(f"tight_r6: {tight_r6}, tight_s6: {tight_s6}")
+
     next_day = get_next_day()
     print(f"next_day: {next_day}")
 
@@ -75,11 +75,10 @@ for ticker in tickers:
         ticker=ticker, day=next_day)
     print(f"next_c: {next_c}, next_h: {next_h}, next_l: {next_l}, next_o: {next_o}, next_v: {next_v}, next_vw: {next_vw}, next_n: {next_n}")
 
-    
-    total_range_percent = get_total_range_percent(ticker,today)
+    total_range_percent = get_total_range_percent(ticker, today)
     print(f"total_range_percent: {total_range_percent}")
-    
-    gap_percent = get_gap_percent(ticker)
+
+    gap_percent = get_gap_percent(today_o, prev_c)
     print(f"gap_percent: {gap_percent}")
 
     premarket_v_cumulative, premarket_h, premarket_h_timestamp, premarket_l, premarket_l_timestamp, premarket_range_percent, daily_volume_forecast = get_misc_2_min_data_premarket(
@@ -93,7 +92,7 @@ for ticker in tickers:
         ticker, today)
     print(
         f"regular_market_h_timestamp: {regular_market_h_timestamp}, regular_market_l_timestamp: {regular_market_l_timestamp}")
-    
+
     highest_v_timestamp, highest_v_n, highest_v, aggregate_v_before_highest_v, highest_bar_v_ratio_percent = get_misc_2_min_data_till_3_58(
         ticker, today)
     print(f"highest_v_timestamp: {highest_v_timestamp}, highest_v_n: {highest_v_n}, highest_v: {highest_v}, aggregate_v_before_highest_v: {aggregate_v_before_highest_v}, highest_bar_v_ratio_percent: {highest_bar_v_ratio_percent}")
@@ -114,6 +113,101 @@ for ticker in tickers:
 
     pm_ft_percent = get_premarket_ft_percent(premarket_v_cumulative, shs_float)
     print(f"pm_ft_percent {pm_ft_percent}")
-    
+
     first_hour_ft_percent = get_first_hour_ft_percent(first_hour_v, shs_float)
     print(f"first_hour_ft_percent {first_hour_ft_percent}")
+
+    next_r4 = get_next_r4(premarket_h, today_r4)
+    print(f"next_r4 {next_r4}")
+    next_s4 = get_next_s4(premarket_l, today_s4)
+    print(f"next_s4 {next_s4}")
+
+    last_H_eq_cam = get_last_H_eq_cam(
+        today_r3, today_s3, today_r4, today_s4, today_r6, today_s6, next_h)
+    print(f"last_H_eq_cam {last_H_eq_cam}")
+    last_L_eq_cam = get_last_L_eq_cam(
+        today_r3, today_s3, today_r4, today_s4, today_r6, today_s6, next_l)
+    print(f"last_L_eq_cam {last_L_eq_cam}")
+    fifty_two_week_H_eq_cam = get_fifty_two_week_H_eq_cam(
+        today_r3, today_s3, today_r4, today_s4, today_r6, today_s6, fifty_two_week_l)
+    print(f"fifty_two_week_H_eq_cam {fifty_two_week_H_eq_cam}")
+    fifty_two_week_L_eq_cam = get_fifty_two_week_L_eq_cam(
+        today_r3, today_s3, today_r4, today_s4, today_r6, today_s6, fifty_two_week_l)
+    print(f"fifty_two_week_L_eq_cam {fifty_two_week_L_eq_cam}")
+
+    candle_patterns = get_candle_patterns(prev_day, prev_o, prev_h, prev_l, prev_c, today,
+                                          today_o, today_h, today_l, today_c, next_day, next_o, next_h, next_l, next_c)
+    print(f"candle_patterns {candle_patterns}")
+
+    if market_cap:
+        market_cap = numerize.numerize(market_cap, 2)
+    if share_class_shares_outstanding:
+        share_class_shares_outstanding = numerize.numerize(
+            share_class_shares_outstanding, 2)
+    if gap_percent:
+        gap_percent = round(gap_percent, 2)
+    if total_range_percent:
+        total_range_percent = round(total_range_percent, 2)
+    if aggregate_v_before_highest_v:
+        aggregate_v_before_highest_v = numerize.numerize(
+            aggregate_v_before_highest_v, 2)
+    if highest_bar_v_ratio_percent:
+        highest_bar_v_ratio_percent = round(highest_bar_v_ratio_percent, 2)
+    if highest_v:
+        highest_v = numerize.numerize(highest_v, 2)
+    if highest_v_timestamp:
+        highest_v_timestamp = convert_millis_to_local_time(
+            highest_v_timestamp)
+    if daily_volume_forecast:
+        daily_volume_forecast = numerize.numerize(daily_volume_forecast, 2)
+    if premarket_range_percent:
+        premarket_range_percent = round(premarket_range_percent, 2)
+    if premarket_h_timestamp:
+        premarket_h_timestamp = convert_millis_to_local_time(
+            premarket_h_timestamp)
+    if premarket_l_timestamp:
+        premarket_l_timestamp = convert_millis_to_local_time(
+            premarket_l_timestamp)
+    if regular_market_h_timestamp:
+        regular_market_h_timestamp = convert_millis_to_local_time(
+            regular_market_h_timestamp)
+    if regular_market_l_timestamp:
+        regular_market_l_timestamp = convert_millis_to_local_time(
+            regular_market_l_timestamp)
+    if daily_ft_percent:
+        daily_ft_percent = round(daily_ft_percent, 2)
+    if pm_ft_percent:
+        pm_ft_percent = round(pm_ft_percent, 2)
+    if first_hour_ft_percent:
+        first_hour_ft_percent = round(first_hour_ft_percent, 2)
+    if today_v:
+        today_v = numerize.numerize(today_v, 2)
+    if first_hour_v:
+        first_hour_v = numerize.numerize(first_hour_v, 2)
+    if premarket_v_cumulative:
+        premarket_v_cumulative = numerize.numerize(premarket_v_cumulative, 2)
+    '''    
+    try:
+        data = {'name': name,  'ticker': ticker, 'primary_exchange': primary_exchange, 'list_date': list_date,
+                'market_cap': market_cap, 'share_class_shares_outstanding': share_class_shares_outstanding}
+        row = pd.DataFrame([data])
+        df = pd.concat([df, row])
+        # check if the master csv exists and if it does then append to it
+        with open('master.csv', 'a') as f:
+            row.to_csv(f, header=False, index=False)
+
+    except:
+        print("Error in concat")
+    '''
+
+'''
+# write to excel with a sheet number for the date
+today = get_today()
+# if file exists then append the sheet
+filename = os.getenv('filename')
+if os.path.exists(filename):
+    with pd.ExcelWriter(filename, engine='openpyxl', mode='a') as writer:
+        df.to_excel(writer, sheet_name=today, index=False)
+else:
+    df.to_excel(filename, sheet_name=today, index=False)
+'''

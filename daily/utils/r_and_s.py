@@ -60,16 +60,20 @@ def get_s6(c, h, l):
         print(f"Error: get_s6() - c: {c}, h: {h}, l: {l}")
     return s6
 
-def get_tight_r6(prev_r6, curr_r6):
-    if prev_r6 and curr_r6:
-        return True if prev_r6 >= curr_r6 else False
+
+def get_tight_r6(prev_r6, today_r6):
+    if prev_r6 and today_r6:
+        return True if prev_r6 >= today_r6 else False
     else:
-        print(f"Error: get_tight_r6() - prev_r6: {prev_r6}, curr_r6: {curr_r6}")
+        print(
+            f"Error: get_tight_r6() - prev_r6: {prev_r6}, today_r6: {today_r6}")
         return None
 
-def get_tight_s6(prev_s6, curr_s6):
-    if prev_s6 and curr_s6:
-        return True if prev_s6 <= curr_s6 else False
+
+def get_tight_s6(prev_s6, today_s6):
+    if prev_s6 and today_s6:
+        return True if prev_s6 <= today_s6 else False
     else:
-        print(f"Error: get_tight_s6() - prev_s6: {prev_s6}, curr_s6: {curr_s6}")
+        print(
+            f"Error: get_tight_s6() - prev_s6: {prev_s6}, today_s6: {today_s6}")
         return None
