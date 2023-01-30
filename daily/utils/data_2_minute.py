@@ -155,3 +155,8 @@ def get_abs_h(ticker, day):
         if abs_h == res["h"]:
             abs_h_timestamp = res["t"]
     return abs_h, abs_h_timestamp
+
+def get_next_premarket_h_l(ticker,next_day):
+    _, next_premarket_h, _, next_premarket_l, _, _, _ = get_misc_2_min_data_premarket(
+        ticker, next_day)
+    return next_premarket_h, next_premarket_l

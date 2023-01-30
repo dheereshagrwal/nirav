@@ -6,7 +6,6 @@ from utils.date_helpers import *
 from utils.data_2_minute import *
 from utils.finviz import *
 from utils.ft import *
-from utils.candle_patterns import *
 from utils.r_and_s import *
 from utils.eq_cam import *
 from utils.next_r4_s4 import *
@@ -117,9 +116,15 @@ for ticker in tickers:
     first_hour_ft_percent = get_first_hour_ft_percent(first_hour_v, shs_float)
     print(f"first_hour_ft_percent {first_hour_ft_percent}")
 
-    next_r4 = get_next_r4(premarket_h, today_r4)
+    next_h_timestamp,next_l_timestamp = get_misc_2_min_data_regular_market(ticker, next_day)
+    print(f"next_h_timestamp {next_h_timestamp} next_l_timestamp {next_l_timestamp}")
+
+    next_premarket_h, next_premarket_l = get_next_premarket_h_l(ticker, next_day)
+    print(f"next_premarket_h {next_premarket_h} next_premarket_l {next_premarket_l}")
+    
+    next_r4 = get_next_r4(next_premarket_h, today_r4)
     print(f"next_r4 {next_r4}")
-    next_s4 = get_next_s4(premarket_l, today_s4)
+    next_s4 = get_next_s4(next_premarket_l, today_s4)
     print(f"next_s4 {next_s4}")
 
     last_H_eq_cam = get_last_H_eq_cam(
@@ -134,11 +139,8 @@ for ticker in tickers:
     fifty_two_week_L_eq_cam = get_fifty_two_week_L_eq_cam(
         today_r3, today_s3, today_r4, today_s4, today_r6, today_s6, fifty_two_week_l)
     print(f"fifty_two_week_L_eq_cam {fifty_two_week_L_eq_cam}")
-
-    candle_patterns = get_candle_patterns(prev_day, prev_o, prev_h, prev_l, prev_c, today,
-                                          today_o, today_h, today_l, today_c, next_day, next_o, next_h, next_l, next_c)
-    print(f"candle_patterns {candle_patterns}")
-
+    
+    '''
     if market_cap:
         market_cap = numerize.numerize(market_cap, 2)
     if share_class_shares_outstanding:
@@ -155,25 +157,10 @@ for ticker in tickers:
         highest_bar_v_ratio_percent = round(highest_bar_v_ratio_percent, 2)
     if highest_v:
         highest_v = numerize.numerize(highest_v, 2)
-    if highest_v_timestamp:
-        highest_v_timestamp = convert_millis_to_local_time(
-            highest_v_timestamp)
     if daily_volume_forecast:
         daily_volume_forecast = numerize.numerize(daily_volume_forecast, 2)
     if premarket_range_percent:
         premarket_range_percent = round(premarket_range_percent, 2)
-    if premarket_h_timestamp:
-        premarket_h_timestamp = convert_millis_to_local_time(
-            premarket_h_timestamp)
-    if premarket_l_timestamp:
-        premarket_l_timestamp = convert_millis_to_local_time(
-            premarket_l_timestamp)
-    if regular_market_h_timestamp:
-        regular_market_h_timestamp = convert_millis_to_local_time(
-            regular_market_h_timestamp)
-    if regular_market_l_timestamp:
-        regular_market_l_timestamp = convert_millis_to_local_time(
-            regular_market_l_timestamp)
     if daily_ft_percent:
         daily_ft_percent = round(daily_ft_percent, 2)
     if pm_ft_percent:
@@ -186,21 +173,122 @@ for ticker in tickers:
         first_hour_v = numerize.numerize(first_hour_v, 2)
     if premarket_v_cumulative:
         premarket_v_cumulative = numerize.numerize(premarket_v_cumulative, 2)
-    '''    
+    '''
+    if highest_v_timestamp:
+        highest_v_timestamp = convert_millis_to_local_time(
+            highest_v_timestamp)
+    if premarket_h_timestamp:
+        premarket_h_timestamp = convert_millis_to_local_time(
+            premarket_h_timestamp)
+    if premarket_l_timestamp:
+        premarket_l_timestamp = convert_millis_to_local_time(
+            premarket_l_timestamp)
+    if regular_market_h_timestamp:
+        regular_market_h_timestamp = convert_millis_to_local_time(
+            regular_market_h_timestamp)
+    if regular_market_l_timestamp:
+        regular_market_l_timestamp = convert_millis_to_local_time(
+            regular_market_l_timestamp)
+    if next_h_timestamp:
+        next_h_timestamp = convert_millis_to_local_time(next_h_timestamp)
+    if next_l_timestamp:
+        next_l_timestamp = convert_millis_to_local_time(next_l_timestamp)
     try:
-        data = {'name': name,  'ticker': ticker, 'primary_exchange': primary_exchange, 'list_date': list_date,
-                'market_cap': market_cap, 'share_class_shares_outstanding': share_class_shares_outstanding}
+        data = {
+            'today': today,
+            'name': name,
+            'ticker': ticker,
+            'primary_exchange': primary_exchange,
+            'list_date': list_date,
+            'market_cap': market_cap,
+            'today_c': today_c,
+            'today_h': today_h,
+            'today_l': today_l,
+            'today_o': today_o,
+            'today_v': today_v,
+            'today_vw': today_vw,
+            'today_n': today_n,
+            'today_r3': today_r3,
+            'today_r4': today_r4,
+            'today_r6': today_r6,
+            'today_s3': today_s3,
+            'today_s4': today_s4,
+            'today_s6': today_s6,
+            'prev_day': prev_day,
+            'prev_c': prev_c,
+            'prev_h': prev_h,
+            'prev_l': prev_l,
+            'prev_o': prev_o,
+            'prev_v': prev_v,
+            'prev_vw': prev_vw,
+            'prev_n': prev_n,
+            'prev_r3': prev_r3,
+            'prev_r4': prev_r4,
+            'prev_r6': prev_r6,
+            'prev_s3': prev_s3,
+            'prev_s4': prev_s4,
+            'prev_s6': prev_s6,
+            'tight_r6': tight_r6,
+            'tight_s6': tight_s6,
+            '52W High': fifty_two_week_h,
+            '52W Low': fifty_two_week_l,
+            'Candle Pattern':None,
+            'STRAT Method':None,
+            'ATR 14 Days':atr,
+            'next_day': next_day,
+            'next_c': next_c,
+            'next_h': next_h,
+            'next_l': next_l,
+            'next_o': next_o,
+            'next_v': next_v,
+            'next_vw': next_vw,
+            'next_n': next_n,
+            'next_h_time': next_h_timestamp,
+            'next_l_time': next_l_timestamp,
+            'R4 Premarket':next_r4,
+            'S4 Premarket':next_s4,
+            'last_H_eq_cam': last_H_eq_cam,
+            'last_L_eq_cam': last_L_eq_cam,
+            '52W_H_eq_cam': fifty_two_week_H_eq_cam,
+            '52W_L_eq_cam': fifty_two_week_L_eq_cam,
+            'Next Earning Date': None,
+            'Total Range %': total_range_percent,
+            'Gap %': gap_percent,        
+            'Premarket Volume (cumm)': premarket_v_cumulative,
+            'Premarket High': premarket_h,
+            'Premarket High Time': premarket_h_timestamp,
+            'Premarket Low': premarket_l,
+            'Premarket Low Time': premarket_l_timestamp,
+            'Premarket Range %':premarket_range_percent,
+            'Daily Volume Forecast': daily_volume_forecast,
+            'First Hour Volume': first_hour_v,
+            'Regular Market High Time':regular_market_h_timestamp,
+            'Regular Market Low Time':regular_market_l_timestamp,
+            'Highest Volume Time': highest_v_timestamp,
+            'Highest Volume Time - num_trans': highest_v_n,
+            'Highest Volume':highest_v,
+            'Aggregated Volume Before Highest Volume': aggregate_v_before_highest_v,
+            'Highest Bar Volume Ratio %': highest_bar_v_ratio_percent,
+            'Target 0%': target_0,
+            'Target 25%': target_25,
+            'Target 50%': target_50,
+            'Target 75%': target_75,
+            'Target 100%': target_100,
+            'share_class_shares_outstanding': share_class_shares_outstanding,
+            'Daily FT %': daily_ft_percent,
+            'PM FT %': pm_ft_percent,
+            'First Hour FT %': first_hour_ft_percent,
+        }
         row = pd.DataFrame([data])
         df = pd.concat([df, row])
         # check if the master csv exists and if it does then append to it
-        with open('master.csv', 'a') as f:
-            row.to_csv(f, header=False, index=False)
-
+        # with open('master.csv', 'a') as f:
+        #     row.to_csv(f, header=False, index=False)
     except:
         print("Error in concat")
-    '''
+    
 
-'''
+
 # write to excel with a sheet number for the date
 today = get_today()
 # if file exists then append the sheet
@@ -210,4 +298,3 @@ if os.path.exists(filename):
         df.to_excel(writer, sheet_name=today, index=False)
 else:
     df.to_excel(filename, sheet_name=today, index=False)
-'''
