@@ -1,9 +1,27 @@
-#create a dataframe with column names of Date, Open, High, Low, Close, Volume
-import pandas as pd
-df = pd.DataFrame(columns=['Date','Open','High','Low','Close','Volume'])
-#add some data to the dataframe for candlestick chart
-df.loc[0] = ['2018-01-01', 100, 110, 90, 100, 1000]
-df.loc[1] = ['2018-01-02', 110, 120, 100, 110, 2000]
-df.loc[2] = ['2018-01-03', 120, 130, 110, 120, 3000]
-df.loc[3] = ['2018-01-04', 130, 140, 120, 130, 4000]
+from datetime import datetime, timedelta
+import requests
+def get_response(url):
+    response = requests.get(url)
+    return response
 
+def get_fifty_two_week_h_l(ticker):
+    today = '2023-01-26'
+    #from_time is today - 1 year from today not prev_day
+    from_time = datetime.strptime(today, '%Y-%m-%d') - timedelta(days=365)
+    from_time = from_time.strftime('%Y-%m-%d')
+    to_time = today
+    print(f"from_time: {from_time}")
+    print(f"to_time: {to_time}")
+    resp = get_response(
+        f"https://api.polygon.io/v2/aggs/ticker/{ticker}/range/1/year/{from_time}/{to_time}?adjusted=true&sort=asc&apiKey=i4FD6ltLyeM_7fLvcb7JtaJpifMG5D6M")
+    fifty_two_week_h = None
+    fifty_two_week_l = None
+    try:
+        results = resp.json()["results"]
+        fifty_two_week_h = results[0]["h"]
+        fifty_two_week_l = results[0]["l"]
+    except:
+        pass
+    return fifty_two_week_h, fifty_two_week_l
+
+print(get_fifty_two_week_h_l('AAPL'))

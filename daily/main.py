@@ -139,41 +139,7 @@ for ticker in tickers:
     fifty_two_week_L_eq_cam = get_fifty_two_week_L_eq_cam(
         today_r3, today_s3, today_r4, today_s4, today_r6, today_s6, fifty_two_week_l)
     print(f"fifty_two_week_L_eq_cam {fifty_two_week_L_eq_cam}")
-    
-    '''
-    if market_cap:
-        market_cap = numerize.numerize(market_cap, 2)
-    if share_class_shares_outstanding:
-        share_class_shares_outstanding = numerize.numerize(
-            share_class_shares_outstanding, 2)
-    if gap_percent:
-        gap_percent = round(gap_percent, 2)
-    if total_range_percent:
-        total_range_percent = round(total_range_percent, 2)
-    if aggregate_v_before_highest_v:
-        aggregate_v_before_highest_v = numerize.numerize(
-            aggregate_v_before_highest_v, 2)
-    if highest_bar_v_ratio_percent:
-        highest_bar_v_ratio_percent = round(highest_bar_v_ratio_percent, 2)
-    if highest_v:
-        highest_v = numerize.numerize(highest_v, 2)
-    if daily_volume_forecast:
-        daily_volume_forecast = numerize.numerize(daily_volume_forecast, 2)
-    if premarket_range_percent:
-        premarket_range_percent = round(premarket_range_percent, 2)
-    if daily_ft_percent:
-        daily_ft_percent = round(daily_ft_percent, 2)
-    if pm_ft_percent:
-        pm_ft_percent = round(pm_ft_percent, 2)
-    if first_hour_ft_percent:
-        first_hour_ft_percent = round(first_hour_ft_percent, 2)
-    if today_v:
-        today_v = numerize.numerize(today_v, 2)
-    if first_hour_v:
-        first_hour_v = numerize.numerize(first_hour_v, 2)
-    if premarket_v_cumulative:
-        premarket_v_cumulative = numerize.numerize(premarket_v_cumulative, 2)
-    '''
+
     if highest_v_timestamp:
         highest_v_timestamp = convert_millis_to_local_time(
             highest_v_timestamp)
@@ -193,6 +159,112 @@ for ticker in tickers:
         next_h_timestamp = convert_millis_to_local_time(next_h_timestamp)
     if next_l_timestamp:
         next_l_timestamp = convert_millis_to_local_time(next_l_timestamp)
+
+    if prev_day:
+        prev_day = convert_YYYY_MM_DD_to_MM_DD_YYYY(prev_day)
+    if today:
+        today = convert_YYYY_MM_DD_to_MM_DD_YYYY(today)
+    if list_date:
+        list_date = convert_YYYY_MM_DD_to_MM_DD_YYYY(list_date)
+    if next_day:
+        next_day = convert_YYYY_MM_DD_to_MM_DD_YYYY(next_day)
+
+    if market_cap:
+        market_cap = numerize.numerize(market_cap,currency="$")
+
+    if prev_c:
+        prev_c = "$" + str(prev_c)
+    if prev_h:
+        prev_h = "$" + str(prev_h)
+    if prev_l:
+        prev_l = "$" + str(prev_l)
+    if prev_o:
+        prev_o = "$" + str(prev_o)
+    if prev_vw:
+        prev_vw = "$" + str(prev_vw)
+    if prev_v:
+        #if prev_v is 2000000, then prev_v = 2,000,000
+        prev_v = "{:,}".format(prev_v)
+    if prev_n:
+        prev_n = "{:,}".format(prev_n)
+    if prev_r3:
+        prev_r3 = "$" + str(prev_r3)
+    if prev_r4:
+        prev_r4 = "$" + str(prev_r4)
+    if prev_r6:
+        prev_r6 = "$" + str(prev_r6)
+    if prev_s3:
+        prev_s3 = "$" + str(prev_s3)
+    if prev_s4:
+        prev_s4 = "$" + str(prev_s4)
+    if prev_s6:
+        prev_s6 = "$" + str(prev_s6)
+
+    if today_c:
+        today_c = "$" + str(today_c)
+    if today_h:
+        today_h = "$" + str(today_h)
+    if today_l:
+        today_l = "$" + str(today_l)
+    if today_o:
+        today_o = "$" + str(today_o)
+    if today_vw:
+        today_vw = "$" + str(today_vw)
+    if today_v:
+        today_v = "{:,}".format(today_v)
+    if today_n:
+        today_n = "{:,}".format(today_n)
+    if today_r3:
+        today_r3 = "$" + str(today_r3)
+    if today_r4:
+        today_r4 = "$" + str(today_r4)
+    if today_r6:
+        today_r6 = "$" + str(today_r6)
+    if today_s3:
+        today_s3 = "$" + str(today_s3)
+    if today_s4:
+        today_s4 = "$" + str(today_s4)
+    if today_s6:
+        today_s6 = "$" + str(today_s6)
+    
+    if fifty_two_week_h:
+        fifty_two_week_h = "$" + str(fifty_two_week_h)
+    if fifty_two_week_l:
+        fifty_two_week_l = "$" + str(fifty_two_week_l)
+
+    if next_c:
+        next_c = "$" + str(next_c)
+    if next_h:
+        next_h = "$" + str(next_h)
+    if next_l:
+        next_l = "$" + str(next_l)
+    if next_o:
+        next_o = "$" + str(next_o)
+    if next_vw:
+        next_vw = "$" + str(next_vw)
+    if next_v:
+        next_v = "{:,}".format(next_v)
+    if next_n:
+        next_n = "{:,}".format(next_n)
+
+    if premarket_v_cumulative:
+        premarket_v_cumulative = "{:,}".format(premarket_v_cumulative)
+    if premarket_h:
+        premarket_h = "$" + str(premarket_h)
+    if premarket_l:
+        premarket_l = "$" + str(premarket_l)
+    if daily_volume_forecast:
+        daily_volume_forecast = "{:,}".format(daily_volume_forecast)
+    if first_hour_v:
+        first_hour_v = "{:,}".format(first_hour_v)
+    if highest_v:
+        highest_v = "{:,}".format(highest_v)
+    if highest_v_n:
+        highest_v_n = "{:,}".format(highest_v_n)
+    if aggregate_v_before_highest_v:
+        aggregate_v_before_highest_v = "{:,}".format(aggregate_v_before_highest_v)
+    if share_class_shares_outstanding:
+        share_class_shares_outstanding = "{:,}".format(share_class_shares_outstanding)
     try:
         data = {
             'today': today,
@@ -291,6 +363,7 @@ for ticker in tickers:
 
 # write to excel with a sheet number for the date
 today = get_today()
+today = convert_YYYY_MM_DD_to_MM_DD_YYYY(today)
 # if file exists then append the sheet
 filename = os.getenv('filename')
 if os.path.exists(filename):

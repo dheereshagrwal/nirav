@@ -48,3 +48,6 @@ def convert_millis_to_local_time(millis):
 def convert_seconds_to_utc_date(seconds):
     #convert to utc not to local time
     return datetime.utcfromtimestamp(seconds).strftime('%Y-%m-%d')
+
+def convert_YYYY_MM_DD_to_MM_DD_YYYY(date):
+    return datetime.strptime(date, '%Y-%m-%d').strftime('%m-%d-%Y')

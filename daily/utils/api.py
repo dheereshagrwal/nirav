@@ -1,3 +1,4 @@
+from datetime import timedelta
 from utils.date_helpers import *
 import requests
 import os
@@ -84,8 +85,12 @@ def get_2_minute_data(ticker, from_time, to_time):
 
 def get_fifty_two_week_h_l(ticker):
     today = get_today()
+    #from_time is today - 1 year from today not prev_day
+    from_time = datetime.strptime(today, '%Y-%m-%d') - timedelta(days=365)
+    from_time = from_time.strftime('%Y-%m-%d')
+    to_time = today
     resp = get_response(
-        f"https://api.polygon.io/v2/aggs/ticker/{ticker}/range/1/year/{today}/{today}?adjusted=true&sort=asc&apiKey={apiKey}")
+        f"https://api.polygon.io/v2/aggs/ticker/{ticker}/range/1/year/{from_time}/{to_time}?adjusted=true&sort=asc&apiKey={apiKey}")
     fifty_two_week_h = None
     fifty_two_week_l = None
     try:
