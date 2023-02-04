@@ -1,2 +1,2 @@
-TSLA
-AMD
+V
+MSFT
