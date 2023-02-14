@@ -10,7 +10,6 @@ from utils.r_and_s import *
 from utils.eq_cam import *
 from utils.next_r4_s4 import *
 from numerize_denumerize import numerize
-from candlestick_patterns import pattern
 try:
     file = open("tickers.txt", "r")
     tickers = file.readlines()
@@ -22,9 +21,6 @@ except:
     exit()
 
 df = pd.DataFrame()
-patterns_df = pd.DataFrame()
-if os.path.exists('patterns.xlsx'):
-    patterns_df = pd.read_excel('patterns.xlsx')
 for ticker in tickers:
     print(f"ticker: {ticker}")
 
@@ -144,17 +140,15 @@ for ticker in tickers:
         today_r3, today_s3, today_r4, today_s4, today_r6, today_s6, fifty_two_week_l)
     print(f"fifty_two_week_L_eq_cam {fifty_two_week_L_eq_cam}")
 
-    candles_df = pd.DataFrame({
-        'Date': [prev_day, today, next_day],
-        'Ticker': [ticker, ticker, ticker],
-        'Open': [prev_c,today_c,next_c],
-        'High': [prev_h,today_h,next_h],
-        'Low': [prev_l,today_l,next_l],
-        'Close': [prev_c,today_c,next_c],
-    })
-    candles_df = pattern.all_patterns(candles_df,single=True)
-    #concat candles_df to patterns_df
-    patterns_df = pd.concat([patterns_df, candles_df], ignore_index=True)
+    if prev_day:
+        prev_day = convert_YYYY_MM_DD_to_MM_DD_YYYY(prev_day)
+    if today:
+        today = convert_YYYY_MM_DD_to_MM_DD_YYYY(today)
+    if list_date:
+        list_date = convert_YYYY_MM_DD_to_MM_DD_YYYY(list_date)
+    if next_day:
+        next_day = convert_YYYY_MM_DD_to_MM_DD_YYYY(next_day)
+        
     if highest_v_timestamp:
         highest_v_timestamp = convert_millis_to_local_time(
             highest_v_timestamp)
@@ -175,14 +169,6 @@ for ticker in tickers:
     if next_l_timestamp:
         next_l_timestamp = convert_millis_to_local_time(next_l_timestamp)
 
-    if prev_day:
-        prev_day = convert_YYYY_MM_DD_to_MM_DD_YYYY(prev_day)
-    if today:
-        today = convert_YYYY_MM_DD_to_MM_DD_YYYY(today)
-    if list_date:
-        list_date = convert_YYYY_MM_DD_to_MM_DD_YYYY(list_date)
-    if next_day:
-        next_day = convert_YYYY_MM_DD_to_MM_DD_YYYY(next_day)
 
     if market_cap:
         market_cap = numerize.numerize(market_cap,currency="$")
@@ -331,7 +317,6 @@ for ticker in tickers:
             'tight_s6': tight_s6,
             '52W High': fifty_two_week_h,
             '52W Low': fifty_two_week_l,
-            'Candle Pattern':None,
             'STRAT Method':None,
             'ATR 14 Days':atr,
             'next_day': next_day,
@@ -387,9 +372,6 @@ for ticker in tickers:
     except:
         print("Error in concat")
     
-
-patterns_df = patterns_df.drop_duplicates()
-patterns_df.to_excel('patterns.xlsx', index=False)
 # write to excel with a sheet number for the date
 today = get_today()
 today = convert_YYYY_MM_DD_to_MM_DD_YYYY(today)
