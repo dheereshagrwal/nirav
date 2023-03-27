@@ -83,8 +83,7 @@ def get_2_minute_data(ticker, from_time, to_time):
     return results
 
 
-def get_fifty_two_week_h_l(ticker):
-    today = get_today()
+def get_fifty_two_week_h_l(ticker, today):
     from_time = today
     to_time = today
     resp = get_response(

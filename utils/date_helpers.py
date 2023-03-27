@@ -1,6 +1,5 @@
 from datetime import datetime
-import os
-from dotenv import load_dotenv
+
 import pandas as pd
 
 
@@ -12,32 +11,6 @@ def get_timestamp(date, time):
     return int(date)
 
 
-load_dotenv()
-
-
-def get_today():
-    try:
-        today = os.getenv("today")
-        return today
-    except:
-        print("today not found in .env file, exiting...")
-        exit()
-
-
-def get_prev_day():
-    try:
-        prev_day = os.getenv("prev_day")
-        return prev_day
-    except:
-        print("prev_day not found in .env file, exiting...")
-        exit()
-def get_next_day():
-    try:
-        next_day = os.getenv("next_day")
-        return next_day
-    except:
-        print("next_day not found in .env file, exiting...")
-        exit()
 
 def convert_millis_to_local_time(millis):
     #I want only the local time, not the date
